@@ -7,7 +7,6 @@
 
 import Foundation
 
-
 struct OnlymJSON: Codable {
     let banners: [BannerJson]
     let articles: [ArticleJson]

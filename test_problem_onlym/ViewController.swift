@@ -24,9 +24,9 @@ class MainViewController: UIViewController {
         tableView.dataSource = self
         uiView.layer.cornerRadius = 8.0
         uiView.layer.borderColor = UIColor.black.cgColor
-    
+        
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
-    
+        
         
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(didTapAdd))
         
@@ -89,7 +89,7 @@ class MainViewController: UIViewController {
         let viewController = storeboard.instantiateViewController(withIdentifier: "new_item_vc")
         navigationController?.pushViewController(viewController, animated: true)
     }
-
+    
     
     func getData(){
         guard let url = URL(string: "https://onlym.ru/api_test/test.json") else{
@@ -187,17 +187,24 @@ class MainViewController: UIViewController {
 extension MainViewController: UITableViewDelegate{
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         print("you tapped me! \(indexPath.row)")
+        let articleItem = coreArticle[indexPath.row]
+        let bannerItem = coreBanner[indexPath.row]
+        
+        
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        guard let detailViewController = storyboard.instantiateViewController(withIdentifier: "detail_vc") as? DetailsViewController else {
+            return
+        }
+        detailViewController.articleTitle = articleItem.title ?? ""
+        detailViewController.banenrImage = bannerItem.color ?? ""
+        detailViewController.articleText = articleItem.text ?? ""
+        show(detailViewController, sender: nil)
     }
 }
 
 extension MainViewController: UITableViewDataSource{
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return self.coreArticle.count
-    }
-    
-    func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
-        tableView.deselectRow(at: indexPath, animated: true)
-//        let item = coreArticle[indexPath.row]
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {

@@ -22,6 +22,11 @@ class SettingsViewController: UIViewController {
         getAll()
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        getAll()
+    }
+    
     func getAll(){
         do {
             coreBanner = try context.fetch(Banner.fetchRequest())
@@ -44,12 +49,12 @@ class SettingsViewController: UIViewController {
     }
     
     @objc func toggle(_ sender: UISwitch){
+        print("Toggle: \(sender.tag)")
         let currentBanner = coreBanner[sender.tag]
         print("Current Banner: \(currentBanner)")
         updateBanner(item: currentBanner, newState: sender.isOn)
     }
-
-
+    
 }
 
 extension SettingsViewController: UITableViewDataSource{
@@ -63,6 +68,7 @@ extension SettingsViewController: UITableViewDataSource{
         cellBanner.textLabel?.text = bannerModel.name
         let switchObj = UISwitch(frame: CGRect(x:1, y: 1, width: 20, height: 20))
         switchObj.isOn = bannerModel.active
+        switchObj.tag = indexPath.row
         switchObj.addTarget(self, action: #selector(self.toggle(_:)), for: .valueChanged)
         cellBanner.accessoryView = switchObj
         return cellBanner
